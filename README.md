@@ -15,7 +15,7 @@ A Function to Read a Line from a File Descriptor
 
 ## 1. Description
 
-The goal of this project is to implement that reads and returns a line read from a [file descriptor](#6-useful-defintions) `fd`, handling different file types and sizes efficiently.
+The goal of this project is to implement a function that reads and returns a line read from a [file descriptor](#6-useful-defintions) `fd`, handling different file types and sizes efficiently.
 
 The functions reads characters either up to a user-defined [BUFFER_SIZE](#6-useful-defintions)`BUFFER_SIZE`, until a newline character `('\n')` is encountered, or until the end of the file `'\0'` is reacherd. It ensures that leftover data between function calls is properly managed through the use of [static variables](#a-static-variable-static-charleft_string).
 
