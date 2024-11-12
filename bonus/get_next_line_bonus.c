@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 10:48:34 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/22 12:17:17 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:42:08 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,15 @@ char	*ft_extract_line(char *left_string)
 	return (extract_line);
 }
 
-void	*ft_free(char *left_string, char *buffer)
+char	*ft_free(char *left_string, char *buffer)
 {
 	char	*temp;
 
 	if (!left_string)
 		left_string = ft_strdup("");
-	temp = left_string;
-	left_string = ft_strjoin(temp, buffer);
-	free(temp);
-	return (left_string);
+	temp = ft_strjoin(left_string, buffer);
+	free(left_string);
+	return (temp);
 }
 
 char	*ft_read_to_buffer(int fd, char *left_string)
@@ -88,10 +87,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 	{
 		b_read = read(fd, buffer, BUFFER_SIZE);
 		if (b_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (free(buffer), free(left_string), NULL);
 		if (b_read == 0)
 			break ;
 		buffer[b_read] = '\0';
@@ -99,8 +95,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	free(buffer);
-	return (left_string);
+	return (free(buffer), left_string);
 }
 
 char	*get_next_line(int fd)
@@ -109,16 +104,11 @@ char	*get_next_line(int fd)
 	char		*extract_line;
 	char		*update_string;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX || read(fd, 0, 0) < 0)
-	{
-		if (left_string[fd])
-		{
-			free(left_string[fd]);
-			left_string[fd] = NULL;
-		}
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
 		return (NULL);
-	}
 	left_string[fd] = ft_read_to_buffer(fd, left_string[fd]);
+	if (!left_string[fd])
+		return (NULL);
 	extract_line = ft_extract_line(left_string[fd]);
 	if (!extract_line)
 	{
